@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data from Object Storage</title>
+</head>
+<body>
+    <h1>Fetch Data from IBM Cloud Object Storage</h1>
+    <button id="fetchButton">Fetch Data</button>
+    <pre id="result"></pre>
+
+    <script>
+        const fetchButton = document.getElementById('fetchButton');
+        const result = document.getElementById('result');
+
+        fetchButton.addEventListener('click', async () => {
+            const objectStorageUrl = 'https://s3.us-south.cloud-object-storage.appdomain.cloud/regionalbuckettest/test.txt';
+            const accessKeyId = '2cda2e0683b0499f9637c9bdc620d838'; // Replace with your actual Access Key ID
+           const secretAccessKey = 'd24d98db446d228291a99848a990b95415242a75eb40e1a0';
+            try {
+                const response = await fetch(objectStorageUrl, {
+                    method: 'GET',
+                    headers: {
+                        // Include any necessary headers here (if needed)
+                       // 'Authorization': 'Bearer OTtuvBri7U0VvuSAY9I0bsTqYuy7YXB-pzz-o09Ryunq'
+                        'Authorization': `AWS ${accessKeyId}:${secretAccessKey}`,
+                        'x-amz-date': new Date().toISOString().replace(/[:-]|\.\d{3}/g, ''), 
+                    'X-Amz-Content-Sha256':'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+                    // 'Origin': 'https://localhost:3000/',
+                   
+                    }
+                });
+              //  
+                if (response.ok) {
+                    const data = await response.text();
+                    result.textContent = `Data fetched successfully:\n${data}`;
+                } else {
+                    result.textContent = `Failed to fetch data: ${response.status} ${response.statusText}`;
+                }
+            } catch (error) {
+                result.textContent = `Error fetching data: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>
